@@ -20,8 +20,10 @@ script 1: Input data here
 
 The file should be simple to read and understand.
 
-Read csv
-Read Excel
+Read_csv in r
+Read_Excel in r
+Maybe using pandas library in Python
+Once data is in, I will need to assign appropriate variables to the data based on the column headings in the data set.
 
 Assign Home Location for outputs
 
@@ -36,23 +38,29 @@ Assign Variables
     Group
     ...
 
-PowerAnlysis(Variable1, Variable2)
+PowerAnlysis(Variable1, Variable2)- Can easily be done in R
 
 Power Analysis output
 
-if antibody present convert to geometric mean
+if antibody present convert to geometric mean (can use the geometric mean function available in the scipy library in Python, or the geom.mean() function in the dplyr library in R).
 
-ANOVA
+ANOVA lme4, to perform ANOVA, repeated measures ANOVA, and Mann Whitney U tests.
 ANOVA graph
 
 RM-ANOVA
 RM-ANOVA graph
-
-plus more
+ 
+plus more (can use functions like aov(), lm(), or wilcox.test() depending on the type of statistical test you need to perform.)
 
 Scipt 2-n:
 
 This is where the majority of the code should be hidden. I think a script for each test would be best. I imagine this would simplify things signficanly. The Scipt 1 would only need to call the second function with the approproate variables. 
+
+Options for Nucleotide and Protein Alignments (Python): Biopython(Not sure Yet), Mafft(Only DNA/RNA?), and Clustal Omega (Only Protein?). I would prefer MAAFT for DNA/RNA and Clustal for Protein if there is any cross over. 
+
+PCA - prcomp() function in R or the PCA() function in Python's scikit-learn library.
+
+Tables and Figures - ggplot2 and knitr? 
 
 ### Background information
 
