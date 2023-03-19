@@ -7,9 +7,20 @@ def read_data(path_data = "data.csv",
 
     # Read in the data
     data = pd.read_csv(path_data)
-    # Use SeqIO to read in the fasta file
-    fasta = SeqIO.read(path_fasta, "fasta")
 
+
+    # Use SeqIO to read in the fasta file
+    fasta_file = "test.fasta" #path_fasta
+    sequences = {} #create an empty dictionary to store the sequences
+
+    for seq_record in SeqIO.parse(fasta_file, "fasta"): #parse the fasta file
+        sequence_id = seq_record.id #get the sequence id
+        sequence = str(seq_record.seq) #get the sequence
+        sequences[sequence_id] = sequence #add the sequence to the dictionary
+
+    for sequence_id, sequence in sequences.items():
+        print(f">{sequence_id}\n{sequence}\n")
+    
     # Assign variables - include a print statement to check that the variables are being assigned
     animal = data['Animal'] #comes from csv file
     print("variable animal assigned")
@@ -17,14 +28,10 @@ def read_data(path_data = "data.csv",
     print("variable timepoint assigned")
     antibody = data['Antibody'] #comes from csv file
     print("variable antibody assigned")
-    sequence = data['Sequence'] #comes from fasta file
-    print("variable sequence assigned")
     group = data['Group'] #comes from csv file
     print("variable group assigned")
-    treatment = data['Treatment'] #comes from csv file
+    #treatment = data['Treatment'] #If the variable doesnt exist, it will throw an error. Need to fix this. 
     print("variable treatment assigned")
-
-
 
 
 def main():
