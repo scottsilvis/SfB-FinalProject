@@ -3,7 +3,8 @@ from Bio import SeqIO
 
 
 def read_data(path_data = "data.csv",
-              path_fasta = "test.fasta"):
+              path_fasta = "test.fasta",
+              path_power = "power.csv"):
 
     # Read in the data
     data = pd.read_csv(path_data)
@@ -24,18 +25,23 @@ def read_data(path_data = "data.csv",
     # Assign variables - include a print statement to check that the variables are being assigned
     animal = data['Animal'] #comes from csv file
     print("variable animal assigned")
+    print(animal)
     timepoint = data['Timepoint'] #comes from csv file
     print("variable timepoint assigned")
+    print(timepoint)
     antibody = data['Antibody'] #comes from csv file
     print("variable antibody assigned")
-    group = data['Group'] #comes from csv file
+    print(antibody)
+    group = data['Group'] #The variable exists in the csv file, but it is empty. This seems to work just fine. 
     print("variable group assigned")
+    print(group)
     #treatment = data['Treatment'] #If the variable doesnt exist, it will throw an error. Need to fix this. 
     print("variable treatment assigned")
 
 
 def main():
     import argparse
+    import subprocess
 
     parser = argparse.ArgumentParser()
 
@@ -49,6 +55,8 @@ def main():
             default= None,
             help=('fasta file containing sequence data. '
                   'default: test.fasta'))
+    parser.add_argument('-p', '--path_power', 
+            help="Path to power_analysis.py script")
     # Parse the command-line arguments into a 'dict'-like container
     args = parser.parse_args()
 
@@ -68,6 +76,10 @@ def main():
     # Call the search_text function   
     read_data(path_data = args.data, 
                 path_fasta= args.fasta)
+    
+    if args.path_power:
+        #power_analysis
+        print("executing power_analysis.py")
 
 if __name__ == '__main__':
     main()
