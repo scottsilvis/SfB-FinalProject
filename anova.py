@@ -3,7 +3,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 
-def ANOVA(data, x, y, model='1-way', plot_type='boxplot', figsize=(8,6)):
+def ANOVA(data = 'data.csv', 
+          x = 'Group',
+          y = 'Antibody', 
+          group = 'Group',
+          model='1-way', 
+          x_lab = 'Group',
+          y_lab = 'Antibody',
+          plot_type='boxplot', 
+          figsize=(8,6)):
     """
     Perform ANOVA analysis on a given dataset and create a plot of the result.
 
@@ -26,11 +34,13 @@ def ANOVA(data, x, y, model='1-way', plot_type='boxplot', figsize=(8,6)):
 
     # Perform 1-way ANOVA
     if model == '1-way':
+        print("Performing 1-way ANOVA...")
         groups = [group[y] for name, group in data.groupby(x)]
         anova_result = stats.f_oneway(*groups)
 
     # Perform 2-way ANOVA
     elif model == '2-way':
+        print("Performing 2-way ANOVA...")
         formula = f"{y} ~ {x} + {x} * C({y})"
         model = ols(formula, data).fit()
         anova_table = sm.stats.anova_lm(model, typ=2)
@@ -38,6 +48,7 @@ def ANOVA(data, x, y, model='1-way', plot_type='boxplot', figsize=(8,6)):
 
     # Perform repeated-measures ANOVA
     elif model == 'repeated-measures':
+        print("Performing repeated-measures ANOVA...")
         formula = f"{y} ~ C({x}) + C({x}, Treatment(reference='1'))*Time"
         model = ols(formula, data).fit()
         anova_table = sm.stats.anova_lm(model, typ=2)
@@ -45,6 +56,7 @@ def ANOVA(data, x, y, model='1-way', plot_type='boxplot', figsize=(8,6)):
 
     # Perform MANOVA
     elif model == 'MANOVA':
+        print("Performing MANOVA...")
         y_var = [var for var in data.columns if var != x]
         manova_result = sm.multivariate.manova.MANOVA(data[y_var], data[x]).mv_test()
         anova_result = manova_result.results['x0']['stat'].iloc[0:len(data[x].unique())]
@@ -100,11 +112,17 @@ def main(): # Function to call the linear regression function
     
     # Tell the parser what command-line arguments this script can receive
     parser.add_argument('data', 
-                        help='The name of the data file.')
+                        help='The name of the data file.',
+                        default='data.csv')
     parser.add_argument('x',
-                        help='The name of the column containing the independent variable.')
+                        help='The name of the column containing the independent variable.',
+                        default = 'Group')
     parser.add_argument('y',
-                        help='The name of the column containing the dependent variable.')
+                        help='The name of the column containing the dependent variable.',
+                        default = 'Antobody')
+    parser.add_argument('-g', '--group_names',
+                        help='The names of the treatment groups.',
+                        default='Timepoint')
     parser.add_argument('-m', '--model',
                         help='The type of ANOVA to be performed. Default is 1-way ANOVA.',
                         choices=['1-way', '2-way', 'repeated-measures', 'MANOVA'],
@@ -118,6 +136,12 @@ def main(): # Function to call the linear regression function
                         nargs=2,
                         type=int,
                         default=(8,6))
+    parser.add_argument('x_lab',
+                        help='The label for the x-axis. Default is the name of the x column.',
+                        default = None)
+    parser.add_argument('y_lab',
+                        help='The label for the y-axis. Default is the name of the y column.',
+                        default = None)
     parser.add_argument('-o', '--output',
                         help='The name of the output file. Default is anova.',
                         default='anova')
@@ -128,9 +152,12 @@ def main(): # Function to call the linear regression function
     ANOVA(args.data, 
           args.x, 
           args.y, 
+          args.group_names, 
           args.model, 
           args.plot_type, 
           args.figsize, 
+          args.x_lab,
+          args.y_lab,
           args.output)
     
 if __name__ == "__main__":

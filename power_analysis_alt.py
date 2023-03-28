@@ -3,6 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.stats.power import TTestPower, FTestAnovaPower
 
+"""
+I get an error when run t-test. From what I can tell online, this is due to an error with numby and statsmodels. It still completes, so there isnt anything to worry about. 
+I need to create a chi-square dataset to test the chi-square function.
+I need to create a two-sample t-test dataset to test the two-sample t-test function.
+I would like to have the function plot a power curve like what is in g-power.
+"""
+
 def power_analysis(effect_size=0.5,
                    power=0.8,
                    alpha=0.05,

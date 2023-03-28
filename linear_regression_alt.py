@@ -3,6 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 
+"""
+Testing the linear_regression function with the iris dataset.
+If the group variable is not in the dataframe, the function will plot all data.
+If the group variable is in the dataframe, the function will plot each group.
+The check functions seem to be working. I need to create a test function to check.
+I would still like to add in the ability to add R2, p value, and slope to the plot. 
+I would also like to add a funciton to have group being present, but instead of producing
+a graph for each group, it would produce a graph with all the groups on the same plot.
+"""
+
 
 def linear_regression(x="petal_length_cm", 
                       y="sepal_length_cm", 
@@ -36,9 +46,9 @@ def linear_regression(x="petal_length_cm",
     save_plots : bool
         Whether to save the plots or not. Default is True.
     point_color : str
-        The color of the scatter points. Default is 'b'.
+        The color of the scatter points. Default is '0.2'.
     line_color : str
-        The color of the trendline. Default is 'r'.
+        The color of the trendline. Default is 'k'.
 
     Returns
     -------
@@ -46,7 +56,7 @@ def linear_regression(x="petal_length_cm",
         A dictionary containing the slope, intercept, r-value, p-value, and standard error for each group.
     """
 
-    if not all(isinstance(arg, str) for arg in [x, y, x_lab, y_lab, output, group, path]): # Check if all arguments are strings
+    if not all(isinstance(arg, str) for arg in [x, y, x_lab, y_lab, group, path]): # Check if all arguments are strings
         raise ValueError("Input arguments must be strings")
 
     if not os.path.isfile(path): # Check if the file exists
@@ -59,7 +69,9 @@ def linear_regression(x="petal_length_cm",
     if group not in dataframe.columns: # Check if the group variable is in the dataframe
         print("\nGroup not found in dataframe. Plotting all data.")
         x_data = dataframe[x] # Set x_data to the x variable
+        print("\nThe independent variable is ", x)
         y_data = dataframe[y] # Set y_data to the y variable
+        print("\nThe dependent variable is ", y)
 
         regression = stats.linregress(x_data, y_data) # Perform linear regression
 
@@ -70,6 +82,7 @@ def linear_regression(x="petal_length_cm",
         stderr = regression.stderr # Set stderr to the standard error
 
         plt.scatter(x_data, y_data, c=point_color) # Plot the data
+        print("\nPlotting data")
         plt.plot(x_data, slope * x_data + intercept, c=line_color, label='Fitted line') # Plot the trendline
         plt.xlabel(x_lab) # Set the x-axis label
         plt.ylabel(y_lab) # Set the y-axis label
@@ -77,6 +90,7 @@ def linear_regression(x="petal_length_cm",
 
         if save_plots: # Save the plot if save_plots is True
             plt.savefig(f"{output}.png") 
+            print("\nPlot saved as ", output, ".png")
 
         plt.show() # Show the plot
 
@@ -86,11 +100,12 @@ def linear_regression(x="petal_length_cm",
         print(f"\nGrouping data by {group}")
         groups = dataframe.groupby(group) # Group the data by the group variable
 
-        results = {} # Create an empty dictionary to store the results
-
         for name, group_data in groups: # Loop through each group
             x_data = group_data[x] # Set x_data to the x variable
+            print("\nThe independent variable is ", x)
             y_data = group_data[y] # Set y_data to the y variable
+            print("\nThe dependent variable is ", y)
+            print("\nGroup name is ", name)
 
             regression = stats.linregress(x_data, y_data) # Perform linear regression
 
@@ -101,15 +116,20 @@ def linear_regression(x="petal_length_cm",
             stderr = regression.stderr # Set stderr to the standard error
 
             plt.scatter(x_data, y_data, c=point_color, label=name) # Plot the data
+            print("\nPlotting data")
             plt.plot(x_data, slope * x_data + intercept, c=line_color) # Plot the trendline
             plt.xlabel(x_lab) # Set the x-axis label
             plt.ylabel(y_lab) # Set the y-axis label
             plt.legend() # Show the legend
+            print("slope:", slope, "intercept:", intercept, "r_value:", r_value, "p_value:", p_value, "stderr:", stderr)
+
 
             if save_plots: # Save the plot if save_plots is True
                 plt.savefig(f"{output}_{name}.png") 
-
-            plt.show() # Show the plot
+                print("\nPlot saved as ", output, "_", name, ".png")
+            plt.clf() # Clear the plot
+                
+        print("\nPlots not shown because there are multiple groups.")
 
 def main(): # Function to call the linear regression function
     import argparse
@@ -152,11 +172,11 @@ def main(): # Function to call the linear regression function
                         required=False)
     parser.add_argument("-point_color",
                         help="The color of the scatter points",
-                        default="b",
+                        default="0.2",
                         required=False)
     parser.add_argument("-line_color",
                         help="The color of the trendline",
-                        default="r",
+                        default="k",
                         required=False)
 
     # Parse the command-line arguments into a 'dict'-like container
