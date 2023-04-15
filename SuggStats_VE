@@ -1,8 +1,0 @@
-#module load python #UNCOMMENT THIS IF ON SUPERCOMPUTER
-pip3 install --user virtualenv # install virtualenv
-python3 -m virtualenv SuggStats # create a virtual environment
-source SuggStats/bin/activate # activate the virtual environment
-
-pip3 install scipy pandas matplotlib numpy statsmodels # install packages
-python3 -m pip list #see a list of packages installed 
-# dont forget to deactivate when done
