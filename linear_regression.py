@@ -56,8 +56,8 @@ def linear_regression(x="petal_length_cm",
         A dictionary containing the slope, intercept, r-value, p-value, and standard error for each group.
     """
 
-    if not all(isinstance(arg, str) for arg in [x, y, x_lab, y_lab, group, path]): # Check if all arguments are strings
-        raise ValueError("Input arguments must be strings")
+    #if not all(isinstance(arg, str) for arg in [x, y, x_lab, y_lab, group, path]): # Check if all arguments are strings
+    #    raise ValueError("Input arguments must be strings")
 
     if not os.path.isfile(path): # Check if the file exists
         raise FileNotFoundError("File not found")
@@ -160,7 +160,7 @@ def main(): # Function to call the linear regression function
                         required=False)
     parser.add_argument("-group",
                         help="The group to plot",
-                        #default="species",
+                        default="species",
                         required=False)
     parser.add_argument("-path",
                         help="The path to the data file",
